@@ -1,6 +1,8 @@
-#pragma once
+#pragma 
+#include <memory>
 #include <SDL.h>
 #include "../ECS/ECS.h"
+#include <glm/glm.hpp>
 
 const int MAX_FPS = 60;
 const int MILLISECS_PER_FRAME = 1000 / MAX_FPS;
@@ -12,7 +14,7 @@ class Game {
 		SDL_Window* window;
 		SDL_Renderer* renderer;
 
-		Registry* registry;
+		std::unique_ptr<Registry> registry;
 
 	public:
 		Game(void);

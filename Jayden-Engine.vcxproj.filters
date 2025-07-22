@@ -1536,6 +1536,15 @@
     <None Include="src\Logger\Logger.h">
       <Filter>Headerdateien</Filter>
     </None>
+    <None Include="src\Components\RigidBodyComponent.h">
+      <Filter>Headerdateien</Filter>
+    </None>
+    <None Include="src\Components\SpriteComponent.h">
+      <Filter>Headerdateien</Filter>
+    </None>
+    <None Include="src\Systems\RenderingSystem.h">
+      <Filter>Headerdateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />

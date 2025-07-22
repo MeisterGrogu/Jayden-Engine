@@ -654,6 +654,9 @@
     <None Include="libs\glm\gtx\vector_angle.inl" />
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
+    <None Include="src\Systems\RenderingSystem.h" />
+    <None Include="src\Components\RigidBodyComponent.h" />
+    <None Include="src\Components\SpriteComponent.h" />
     <None Include="src\Logger\Logger.h" />
   </ItemGroup>
   <ItemGroup>

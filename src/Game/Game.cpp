@@ -1,19 +1,23 @@
-#include <iostream>
 #include "Game.h"
 #include "../ECS/ECS.h"
 #include <SDL_image.h>
 #include <glm/glm.hpp>
 #include "../Logger/Logger.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/RigidBodyComponent.h"
+#include "../Components/SpriteComponent.h"
+#include "../Systems/MovementSystem.h"
+#include "../Systems/RenderingSystem.h"
 
 Game::Game() {
+	Logger::set_level(Logger::level::trace);
+	Logger::trace("Game constructor called!");
 	isRunning = false;
-	registry = new Registry();
+	registry = std::make_unique<Registry>();
 	window = NULL;
 	renderer = NULL;
 	windowWidth = 0;
 	windowHeight = 0;
-	Logger::set_level(Logger::level::trace);
-	Logger::trace("Game constructor called!");
 }
 
 Game::~Game(){
@@ -76,8 +80,18 @@ void Game::ProcessInput() {
 }
 
 void Game::Setup() {
+	registry->AddSystem<MovementSystem>();
+	registry->AddSystem<RenderingSystem>();
+
 	Entity tank = registry->CreateEntity();
+	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+	tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
+	tank.AddComponent<SpriteComponent>(10, 10);
+
 	Entity truck = registry->CreateEntity();
+	truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
+	truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
+	truck.AddComponent<SpriteComponent>(10, 50);
 }
 
 void Game::Update() {
@@ -93,10 +107,9 @@ void Game::Update() {
 
 	msPrevFrame = SDL_GetTicks();
 
-	//TODO:
-	//MovementSystem.Update();
-	// CollisionSystem.Update();
-	// DamageSystem.Update();
+	registry->GetSystem<MovementSystem>().Update(deltaTime);
+
+	registry->Update();
 }
 
 void Game::Render() {
@@ -104,7 +117,7 @@ void Game::Render() {
 	SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
 	SDL_RenderClear(renderer);
 
-	// TODO: Render Entity's
+	registry->GetSystem<RenderingSystem>().Update(renderer);
 
 	SDL_RenderPresent(renderer);
 	//// Render update stop
