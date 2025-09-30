@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "../ECS/ECS.h"
 #include <glm/glm.hpp>
+#include "../AssetManager/AssetHandler.h"
 
 const int MAX_FPS = 60;
 const int MILLISECS_PER_FRAME = 1000 / MAX_FPS;
@@ -15,6 +16,7 @@ class Game {
 		SDL_Renderer* renderer;
 
 		std::unique_ptr<Registry> registry;
+		std::unique_ptr<AssetHandler> assetHandler;
 
 	public:
 		Game(void);
@@ -22,6 +24,7 @@ class Game {
 		// TODO init takes title width heigth etc.
 		void Initialize(void);
 		void Run(void);
+		void LoadLevel(int level);
 		void Setup(void);
 		void ProcessInput(void);
 		void Update(void);

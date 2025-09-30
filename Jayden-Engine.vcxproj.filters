@@ -1545,8 +1545,14 @@
     <None Include="src\Systems\RenderingSystem.h">
       <Filter>Headerdateien</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="TODO.txt" />
+    <None Include="TODO.md" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="src\AssetManager\AssetHandler.h">
+      <Filter>Headerdateien</Filter>
+    </None>
+    <None Include="src\AssetManager\AssetHandler.cpp">
+      <Filter>Quelldateien</Filter>
+    </None>
   </ItemGroup>
 </Project>

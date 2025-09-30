@@ -2,6 +2,7 @@
 #include "../ECS/ECS.h"
 #include <SDL_image.h>
 #include <glm/glm.hpp>
+#include <fstream>
 #include "../Logger/Logger.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
@@ -14,6 +15,7 @@ Game::Game() {
 	Logger::trace("Game constructor called!");
 	isRunning = false;
 	registry = std::make_unique<Registry>();
+	assetHandler = std::make_unique<AssetHandler>();
 	window = NULL;
 	renderer = NULL;
 	windowWidth = 0;
@@ -27,7 +29,7 @@ Game::~Game(){
 void Game::Initialize(){
 	//// Rendering init start
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		spdlog::critical("Error initializing rendering.");
+		Logger::critical("Error initializing rendering.");
 		return;
 	}
 	SDL_DisplayMode displayMode;
@@ -40,7 +42,7 @@ void Game::Initialize(){
 		SDL_WINDOWPOS_CENTERED,
 		windowWidth,
 		windowHeight,
-		0 // SDL_WINDOW_RESIZABLE //| SDL_WINDOW_BORDERLESS
+		0 | SDL_WINDOW_BORDERLESS // SDL_WINDOW_RESIZABLE // 
 	);
 	if (!window) {
 		spdlog::critical("Error creating window.");
@@ -79,19 +81,58 @@ void Game::ProcessInput() {
 	}
 }
 
-void Game::Setup() {
+void Game::LoadLevel(int level) {
 	registry->AddSystem<MovementSystem>();
 	registry->AddSystem<RenderingSystem>();
 
+	assetHandler->AddTexture(renderer, "tank-right", "./assets/images/tank-panther-right.png");
+	assetHandler->AddTexture(renderer, "truck-down", "./assets/images/truck-ford-down.png");
+
+	// TODO: I dont like this part loading the tilemap should be seperated and abstracted
+	// TODO: into a Tilemap class in ECS.h so the user doesn't has to
+	// TODO: pase it manualy and the AssetHandler should have e List for that
+	assetHandler->AddTexture(renderer, "tilemap-image", "./assets/tilemaps/jungle.png");
+
+	int tileSize = 32;
+	double tileScale = 2.0;
+	int mapNumCols = 25;
+	int mapNumRows = 20;
+
+	std::fstream mapFile;
+	mapFile.open("./assets/tilemaps/jungle.map");
+
+	for (int y = 0; y < mapNumRows; y++) {
+		for (int x = 0; x < mapNumCols; x++) {
+			char ch;
+			mapFile.get(ch);
+			int srcRectY = std::atoi(&ch) * tileSize;
+			mapFile.get(ch);
+			int srcRectX = std::atoi(&ch) * tileSize;
+			mapFile.ignore();
+
+			// TODO: an Entity is really unefficient for this case instead make a Tile class in ECS.h
+			Entity tile = registry->CreateEntity();
+			tile.AddComponent<TransformComponent>(glm::vec2(x * (tileScale * tileSize), y * (tileScale * tileSize)), glm::vec2(tileScale, tileScale), 0.0);
+			tile.AddComponent<SpriteComponent>("tilemap-image", tileSize, tileSize, srcRectX, srcRectY);
+		}
+	}
+
+	mapFile.close();
+
+
 	Entity tank = registry->CreateEntity();
-	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-	tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
-	tank.AddComponent<SpriteComponent>(10, 10);
+	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(2.0, 2.0), 0.0);
+	tank.AddComponent<RigidBodyComponent>(glm::vec2(80.0, 0.0));
+	tank.AddComponent<SpriteComponent>("tank-right", 32, 32);
 
 	Entity truck = registry->CreateEntity();
-	truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
-	truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
-	truck.AddComponent<SpriteComponent>(10, 50);
+	truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(2.0, 2.0), 0.0);
+	truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 100.0));
+	truck.AddComponent<SpriteComponent>("truck-down", 32, 32);
+}
+
+void Game::Setup() {
+	LoadLevel(1);
 }
 
 void Game::Update() {
@@ -117,7 +158,7 @@ void Game::Render() {
 	SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
 	SDL_RenderClear(renderer);
 
-	registry->GetSystem<RenderingSystem>().Update(renderer);
+	registry->GetSystem<RenderingSystem>().Update(renderer, assetHandler);
 
 	SDL_RenderPresent(renderer);
 	//// Render update stop
