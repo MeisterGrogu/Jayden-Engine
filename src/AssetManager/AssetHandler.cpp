@@ -25,9 +25,14 @@ void AssetHandler::AddTexture(SDL_Renderer* renderer, const std::string& assetId
 
 	textures.emplace(assetId, texture);
 
-	Logger::debug("New Texture with id: \"" + assetId + "\" was added to the Asset Handler!");
+	Logger::trace("New Texture with id: \"" + assetId + "\" was added to the Asset Handler!");
 }
 
 SDL_Texture* AssetHandler::GetTexture(const std::string& assetId) {
-	return textures[assetId];
+	auto tex = textures[assetId];
+	if (std::count(illegalTextures.begin(), illegalTextures.end(), assetId) == 0 && tex == NULL) {
+		Logger::error("Texture \"" + assetId + "\" could not be loaded!");
+		illegalTextures.push_back(assetId);
+	}
+	return tex;
 }

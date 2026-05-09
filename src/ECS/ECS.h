@@ -214,6 +214,10 @@ public:
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// Tilemap
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // Implementation of template functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -273,7 +277,7 @@ void Registry::AddComponent(Entity entity, TArgs&& ...args) {
 
 	entityComponentSignatures[entityId].set(componentId);
 
-	Logger::debug("Component id = " + std::to_string(componentId) + " was added to entity id " + std::to_string(entityId));
+	Logger::trace("Component id = " + std::to_string(componentId) + " was added to entity id " + std::to_string(entityId));
 }
 
 template <typename TComponent>
@@ -283,7 +287,7 @@ void Registry::RemoveComponent(Entity entity) {
 
 	entityComponentSignatures[entityId].set(componentId, false);
 
-	Logger::debug("Component id = " + std::to_string(componentId) + " was removed from entity id " + std::to_string(entityId));
+	Logger::trace("Component id = " + std::to_string(componentId) + " was removed from entity id " + std::to_string(entityId));
 }
 
 template <typename TComponent>

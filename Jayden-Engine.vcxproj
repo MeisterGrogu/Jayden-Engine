@@ -655,6 +655,20 @@
     <None Include="libs\glm\gtx\vector_angle.inl" />
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
+    <None Include="lua53.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
+    <None Include="SDL2_mixer.dll" />
+    <None Include="SDL2_ttf.dll" />
+    <None Include="src\AssetManager\AssetHandler.cpp" />
+    <None Include="src\AssetManager\AssetHandler.h" />
+    <None Include="src\Components\RigidBodyComponent.h" />
+    <None Include="src\Components\SpriteComponent.h" />
+    <None Include="src\ECS\ECS.cpp" />
+    <None Include="src\Game\Game.cpp" />
+    <None Include="src\Logger\Logger.h" />
+    <None Include="src\Main.cpp" />
+    <None Include="src\Systems\RenderingSystem.h" />
     <None Include="TODO.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

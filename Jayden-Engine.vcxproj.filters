@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Main.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="libs\glm\detail\glm.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -34,12 +31,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="libs\imgui\imgui_widgets.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Game.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\ECS.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1533,7 +1524,18 @@
     </None>
     <None Include="docs\MAIN.md" />
     <None Include="docs\README.md" />
-    <None Include="src\Logger\Logger.h">
+    <None Include="TODO.md" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="src\AssetManager\AssetHandler.cpp">
+      <Filter>Quelldateien</Filter>
+    </None>
+    <None Include="lua53.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
+    <None Include="SDL2_mixer.dll" />
+    <None Include="SDL2_ttf.dll" />
+    <None Include="src\AssetManager\AssetHandler.h">
       <Filter>Headerdateien</Filter>
     </None>
     <None Include="src\Components\RigidBodyComponent.h">
@@ -1542,16 +1544,19 @@
     <None Include="src\Components\SpriteComponent.h">
       <Filter>Headerdateien</Filter>
     </None>
+    <None Include="src\ECS\ECS.cpp">
+      <Filter>Quelldateien</Filter>
+    </None>
+    <None Include="src\Game\Game.cpp">
+      <Filter>Quelldateien</Filter>
+    </None>
+    <None Include="src\Logger\Logger.h">
+      <Filter>Headerdateien</Filter>
+    </None>
     <None Include="src\Systems\RenderingSystem.h">
       <Filter>Headerdateien</Filter>
     </None>
-    <None Include="TODO.md" />
-    <None Include=".gitattributes" />
-    <None Include=".gitignore" />
-    <None Include="src\AssetManager\AssetHandler.h">
-      <Filter>Headerdateien</Filter>
-    </None>
-    <None Include="src\AssetManager\AssetHandler.cpp">
+    <None Include="src\Main.cpp">
       <Filter>Quelldateien</Filter>
     </None>
   </ItemGroup>
