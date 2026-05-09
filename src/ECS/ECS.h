@@ -6,6 +6,7 @@
 #include <typeindex>
 #include <memory>
 #include <set>
+#include <unordered_set>
 #include "../Logger/Logger.h"
 
 const unsigned int MAX_COMPONENTS = 32;
@@ -90,7 +91,7 @@ public:
 
 	void AddEntityToSystem(Entity entity);
 	void RemoveEntityFromSystem(Entity entity);
-	std::vector<Entity> GetSystemEnties() const; // getting the Entities in the System
+	std::vector<Entity> GetSystemEntities() const; // getting the Entities in the System
 	const Signature& GetComponentSignature() const; // getting the signature of the Components assigned to this System
 
 	// component which entities need if the system should run at them
@@ -174,6 +175,8 @@ private:
 
 	std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
 
+	std::unordered_set<std::type_index> illegalSystems;
+
 public:
 	Registry() {
 		Logger::trace("Registry constructor called!");
@@ -205,7 +208,7 @@ public:
 	// checks if the game has a system of type TSystem
 	template <typename TSystem> bool HasSystem() const;
 	// returns the system of type TSystem from the registry
-	template <typename TSystem> TSystem& GetSystem() const;
+	template <typename TSystem> TSystem& GetSystem();
 
 	// Checks the component Signature of an entity and add the entity to the
 	// that are interested in it
@@ -216,6 +219,11 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Tilemap
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Animation
+///////////////////////////////////////////////////////////////////////////////////////////////////
+typedef std::vector<int> Animation;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Implementation of template functions
@@ -245,9 +253,21 @@ bool Registry::HasSystem() const {
 }
 
 template<typename TSystem>
-TSystem& Registry::GetSystem() const {
+TSystem& Registry::GetSystem() {
+	if (!HasSystem<TSystem>()) {
+		if (!illegalSystems.count(typeid(TSystem))) {
+			Logger::critical("The System \"{}\" doesn't exist or is not registered!", typeid(TSystem).name());
+			illegalSystems.insert(typeid(TSystem));
+		};
+		return *(new TSystem());
+	}
 	auto system = systems.find(std::type_index(typeid(TSystem)));
-	return *(std::static_pointer_cast<TSystem>(system->second));
+	std::shared_ptr<TSystem> systemPtr = std::static_pointer_cast<TSystem>(system->second);
+	if (!systemPtr) {
+		Logger::critical("The Pointer to the System \"{}\" could not be created!", typeid(TSystem).name());
+		return *(new TSystem());
+	}
+	return *systemPtr; 
 }
 
 

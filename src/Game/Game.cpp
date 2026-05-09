@@ -7,11 +7,14 @@
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
 #include "../Components/SpriteComponent.h"
+#include "../Components/AnimationComponent.h"
 #include "../Systems/MovementSystem.h"
 #include "../Systems/RenderingSystem.h"
+#include "../Systems/AnimationSystem.h"
+#include <SDL_timer.h>
 
 Game::Game() {
-	Logger::set_level(Logger::level::trace);
+	Logger::set_level(Logger::level::debug);
 	Logger::trace("Game constructor called!");
 	isRunning = false;
 	registry = std::make_unique<Registry>();
@@ -84,9 +87,15 @@ void Game::ProcessInput() {
 void Game::LoadLevel(int level) {
 	registry->AddSystem<MovementSystem>();
 	registry->AddSystem<RenderingSystem>();
+	registry->AddSystem<AnimationSystem>();
 
 	assetHandler->AddTexture(renderer, "tank-right", "./assets/images/tank-panther-right.png");
 	assetHandler->AddTexture(renderer, "truck-right", "./assets/images/truck-ford-right.png");
+	assetHandler->AddTexture(renderer, "helicopter-image", "./assets/images/chopper.png");
+	assetHandler->AddTexture(renderer, "radar-image", "./assets/images/radar.png");
+
+	assetHandler->AddAnimation("helicopter-running", {0, 1});
+	assetHandler->AddAnimation("radar-turning", 8);
 
 	// TODO: I dont like this part loading the tilemap should be seperated and abstracted
 	// TODO: into a Tilemap class in ECS.h so the user doesn't has to
@@ -116,17 +125,29 @@ void Game::LoadLevel(int level) {
 			tile.AddComponent<SpriteComponent>("tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
 		}
 	}
-
+	
 	mapFile.close();
 
+	Entity helicopter = registry->CreateEntity();
+	helicopter.AddComponent<TransformComponent>(glm::vec2(10.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
+	helicopter.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 0.0));
+	helicopter.AddComponent<SpriteComponent>("helicopter-image", 32, 32, 2);
+	helicopter.AddComponent<AnimationComponent>("helicopter-running", 10.0, 1, true);
+
+	Entity radar = registry->CreateEntity();
+	radar.AddComponent<TransformComponent>(glm::vec2(windowWidth - 74, 10), glm::vec2(1.0, 1.0), 0.0);
+	radar.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 0.0));
+	radar.AddComponent<SpriteComponent>("radar-image", 64, 64, 50);
+	radar.AddComponent<AnimationComponent>("radar-turning", 5, 1, true);
 
 	Entity tank = registry->CreateEntity();
-	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(2.0, 2.0), 0.0);  
+	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);  
 	tank.AddComponent<RigidBodyComponent>(glm::vec2(20.0, 0.0));
 	tank.AddComponent<SpriteComponent>("tank-right", 32, 32, 1);
+	// tank.AddComponent<BoxColliderComponent>(___);
 
 	Entity truck = registry->CreateEntity();
-	truck.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(2.0, 2.0), 0.0);
+	truck.AddComponent<TransformComponent>(glm::vec2(10.0, 50.0), glm::vec2(1.0, 1.0), 0.0);
 	truck.AddComponent<RigidBodyComponent>(glm::vec2(30.0, 0.0));
 	truck.AddComponent<SpriteComponent>("truck-right", 32, 32, 1);
 }
@@ -148,9 +169,10 @@ void Game::Update() {
 
 	msPrevFrame = SDL_GetTicks();
 
-	registry->GetSystem<MovementSystem>().Update(deltaTime);
-
 	registry->Update();
+
+	registry->GetSystem<MovementSystem>().Update(deltaTime);
+	registry->GetSystem<AnimationSystem>().Update(deltaTime, assetHandler);
 }
 
 void Game::Render() {

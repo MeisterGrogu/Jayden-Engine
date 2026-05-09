@@ -1559,5 +1559,11 @@
     <None Include="src\Main.cpp">
       <Filter>Quelldateien</Filter>
     </None>
+    <None Include="src\Components\AnimationComponent.h">
+      <Filter>Headerdateien</Filter>
+    </None>
+    <None Include="src\Systems\AnimationSystem.h">
+      <Filter>Headerdateien</Filter>
+    </None>
   </ItemGroup>
 </Project>

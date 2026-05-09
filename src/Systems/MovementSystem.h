@@ -14,7 +14,7 @@ public:
 	}
 
 	void Update(double deltaTime) {
-		for (auto entity : GetSystemEnties()) {
+		for (auto& entity : GetSystemEntities()) {
 			TransformComponent& transform = entity.GetComponent<TransformComponent>();
 			const RigidBodyComponent rigidBody = entity.GetComponent<RigidBodyComponent>();
 
