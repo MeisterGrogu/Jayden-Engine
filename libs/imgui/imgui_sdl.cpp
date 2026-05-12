@@ -118,8 +118,9 @@ namespace
 		const float R, G, B, A;
 
 		explicit Color(uint32_t color)
-			: R(((color >> 0) & 0xff) / 255.0f), G(((color >> 8) & 0xff) / 255.0f), B(((color >> 16) & 0xff) / 255.0f), A(((color >> 24) & 0xff) / 255.0f) { }
-		Color(float r, float g, float b, float a) : R(r), G(g), B(b), A(a) { }
+			: R(((color >> 0) & 0xff) / 255.0f), G(((color >> 8) & 0xff) / 255.0f), B(((color >> 16) & 0xff) / 255.0f), A(((color >> 24) & 0xff) / 255.0f) {
+		}
+		Color(float r, float g, float b, float a) : R(r), G(g), B(b), A(a) {}
 
 		Color operator*(const Color& c) const { return Color(R * c.R, G * c.G, B * c.B, A * c.A); }
 		Color operator*(float v) const { return Color(R * v, G * v, B * v, A * v); }
@@ -128,9 +129,9 @@ namespace
 		uint32_t ToInt() const
 		{
 			return	((static_cast<int>(R * 255) & 0xff) << 0)
-				  | ((static_cast<int>(G * 255) & 0xff) << 8)
-				  | ((static_cast<int>(B * 255) & 0xff) << 16)
-				  | ((static_cast<int>(A * 255) & 0xff) << 24);
+				| ((static_cast<int>(G * 255) & 0xff) << 8)
+				| ((static_cast<int>(B * 255) & 0xff) << 16)
+				| ((static_cast<int>(A * 255) & 0xff) << 24);
 		}
 
 		void UseAsDrawColor(SDL_Renderer* renderer) const
@@ -174,7 +175,7 @@ namespace
 		LRUCache<UniformColorTriangleKey, std::unique_ptr<TriangleCacheItem>, UniformColorTriangleCacheSize> UniformColorTriangleCache;
 		LRUCache<GenericTriangleKey, std::unique_ptr<TriangleCacheItem>, GenericTriangleCacheSize> GenericTriangleCache;
 
-		Device(SDL_Renderer* renderer) : Renderer(renderer) { }
+		Device(SDL_Renderer* renderer) : Renderer(renderer) {}
 
 		void SetClipRect(const ClipRect& rect)
 		{
@@ -238,7 +239,8 @@ namespace
 	public:
 		InterpolatedFactorEquation(const T& value0, const T& value1, const T& value2, const ImVec2& v0, const ImVec2& v1, const ImVec2& v2)
 			: Value0(value0), Value1(value1), Value2(value2), V0(v0), V1(v1), V2(v2),
-			Divisor((V1.y - V2.y) * (V0.x - V2.x) + (V2.x - V1.x) * (V0.y - V2.y)) { }
+			Divisor((V1.y - V2.y)* (V0.x - V2.x) + (V2.x - V1.x) * (V0.y - V2.y)) {
+		}
 
 		T Evaluate(float x, float y) const
 		{
@@ -429,7 +431,7 @@ namespace
 			const Color shade = shadeColor.Evaluate(x, y);
 
 			return sampled * shade;
-		}, cached.get());
+			}, cached.get());
 
 		if (!cached->Texture) return;
 
@@ -446,7 +448,7 @@ namespace
 		// The naming inconsistency in the parameters is intentional. The fixed point algorithm wants the vertices in a counter clockwise order.
 		const auto& renderInfo = FixedPointTriangleRenderInfo::CalculateFixedPointTriangleInfo(v3.pos, v2.pos, v1.pos);
 
-		const auto key =std::make_tuple(v1.col,
+		const auto key = std::make_tuple(v1.col,
 			static_cast<int>(std::round(v1.pos.x)) - renderInfo.MinX, static_cast<int>(std::round(v1.pos.y)) - renderInfo.MinY,
 			static_cast<int>(std::round(v2.pos.x)) - renderInfo.MinX, static_cast<int>(std::round(v2.pos.y)) - renderInfo.MinY,
 			static_cast<int>(std::round(v3.pos.x)) - renderInfo.MinX, static_cast<int>(std::round(v3.pos.y)) - renderInfo.MinY);
@@ -621,12 +623,12 @@ namespace ImGuiSDL
 							const bool isUniformColor = isTriangleUniformColor && v2.col == v3.col && v3.col == v4.col && v4.col == v5.col;
 
 							if (isUniformColor
-							&& bounding.IsOnExtreme(v0.pos)
-							&& bounding.IsOnExtreme(v1.pos)
-							&& bounding.IsOnExtreme(v2.pos)
-							&& bounding.IsOnExtreme(v3.pos)
-							&& bounding.IsOnExtreme(v4.pos)
-							&& bounding.IsOnExtreme(v5.pos))
+								&& bounding.IsOnExtreme(v0.pos)
+								&& bounding.IsOnExtreme(v1.pos)
+								&& bounding.IsOnExtreme(v2.pos)
+								&& bounding.IsOnExtreme(v3.pos)
+								&& bounding.IsOnExtreme(v4.pos)
+								&& bounding.IsOnExtreme(v5.pos))
 							{
 								// ImGui gives the triangles in a nice order: the first vertex happens to be the topleft corner of our rectangle.
 								// We need to check for the orientation of the texture, as I believe in theory ImGui could feed us a flipped texture,

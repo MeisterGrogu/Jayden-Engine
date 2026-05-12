@@ -13,7 +13,7 @@ public:
 		RequireComponent<RigidBodyComponent>();
 	}
 
-	void Update(double deltaTime) {
+	void Update(float deltaTime) {
 		for (auto& entity : GetSystemEntities()) {
 			TransformComponent& transform = entity.GetComponent<TransformComponent>();
 			const RigidBodyComponent rigidBody = entity.GetComponent<RigidBodyComponent>();

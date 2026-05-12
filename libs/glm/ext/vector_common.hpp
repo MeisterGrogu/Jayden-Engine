@@ -56,7 +56,7 @@ namespace glm
 	/// @tparam T Floating-point or integer scalar types
 	/// @tparam Q Value from qualifier enum
 	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_DECL GLM_CONSTEXPR vec<L, T, Q> max( vec<L, T, Q> const& x, vec<L, T, Q> const& y, vec<L, T, Q> const& z, vec<L, T, Q> const& w);
+	GLM_FUNC_DECL GLM_CONSTEXPR vec<L, T, Q> max(vec<L, T, Q> const& x, vec<L, T, Q> const& y, vec<L, T, Q> const& z, vec<L, T, Q> const& w);
 
 	/// Returns y if y < x; otherwise, it returns x. If one of the two arguments is NaN, the value of the other argument is returned.
 	///

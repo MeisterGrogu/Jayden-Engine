@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "../Logger/Logger.h"
 
 struct AnimationComponent {

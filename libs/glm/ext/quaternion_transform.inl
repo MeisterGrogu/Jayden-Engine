@@ -7,7 +7,7 @@ namespace glm
 
 		// Axis of rotation must be normalised
 		T len = glm::length(Tmp);
-		if(abs(len - static_cast<T>(1)) > static_cast<T>(0.001))
+		if (abs(len - static_cast<T>(1)) > static_cast<T>(0.001))
 		{
 			T oneOverLen = static_cast<T>(1) / len;
 			Tmp.x *= oneOverLen;

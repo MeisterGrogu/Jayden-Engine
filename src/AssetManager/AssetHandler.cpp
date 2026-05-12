@@ -1,9 +1,12 @@
 #include "AssetHandler.h"
 #include "../Logger/Logger.h"
-#include <SDL_image.h>
-#include <execution>
+#include "../ECS/ECS.h"
 #include <vector>
 #include <numeric>
+#include <string>
+#include <SDL_image.h>
+#include <SDL_render.h>
+#include <SDL_surface.h>
 
 AssetHandler::AssetHandler() {
 	Logger::trace("AssetHandler constructor called!");
@@ -15,7 +18,7 @@ AssetHandler::~AssetHandler() {
 }
 
 void AssetHandler::ClearAssets() {
-	for (auto texture : textures) {
+	for (auto& texture : textures) {
 		SDL_DestroyTexture(texture.second);
 	}
 	textures.clear();

@@ -3,8 +3,10 @@
 #include "../Components/SpriteComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../ECS/ECS.h"
-#include "../Logger/Logger.h"
-#include <SDL.h>
+#include <algorithm>
+#include <SDL_rect.h>
+#include <SDL_render.h>
+#include <vector>
 
 struct RenderableEntity {
 	TransformComponent transformComponent;
@@ -42,12 +44,12 @@ public:
 			SDL_Rect srcRect = sprite.srcRect;
 
 			SDL_Rect dstRect = {
-				transform.position.x,
-				transform.position.y,
-				sprite.width * transform.scale.x,
-				sprite.height * transform.scale.y
+				static_cast<int>(transform.position.x),
+				static_cast<int>(transform.position.y),
+				static_cast<int>(sprite.width * transform.scale.x),
+				static_cast<int>(sprite.height * transform.scale.y)
 			};
-			
+
 			SDL_RenderCopyEx(
 				renderer,
 				assetHandler->GetTexture(sprite.assetId),

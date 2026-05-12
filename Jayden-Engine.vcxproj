@@ -512,9 +512,11 @@
     <ClInclude Include="libs\spdlog\stopwatch.h" />
     <ClInclude Include="libs\spdlog\tweakme.h" />
     <ClInclude Include="libs\spdlog\version.h" />
+    <ClInclude Include="src\Components\BoxColliderComponent.h" />
     <ClInclude Include="src\Components\TransformComponent.h" />
     <ClInclude Include="src\ECS\ECS.h" />
     <ClInclude Include="src\Game\Game.h" />
+    <ClInclude Include="src\Systems\CollisionSystem.h" />
     <ClInclude Include="src\Systems\MovementSystem.h" />
   </ItemGroup>
   <ItemGroup>
@@ -660,15 +662,11 @@
     <None Include="SDL2_image.dll" />
     <None Include="SDL2_mixer.dll" />
     <None Include="SDL2_ttf.dll" />
-    <None Include="src\AssetManager\AssetHandler.cpp" />
     <None Include="src\AssetManager\AssetHandler.h" />
     <None Include="src\Components\AnimationComponent.h" />
     <None Include="src\Components\RigidBodyComponent.h" />
     <None Include="src\Components\SpriteComponent.h" />
-    <None Include="src\ECS\ECS.cpp" />
-    <None Include="src\Game\Game.cpp" />
     <None Include="src\Logger\Logger.h" />
-    <None Include="src\Main.cpp" />
     <None Include="src\Systems\AnimationSystem.h" />
     <None Include="src\Systems\RenderingSystem.h" />
     <None Include="TODO.md" />

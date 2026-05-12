@@ -7,7 +7,10 @@
 #include <memory>
 #include <set>
 #include <unordered_set>
+#include <string>
 #include "../Logger/Logger.h"
+#include <utility>
+#include <stdexcept>
 
 const unsigned int MAX_COMPONENTS = 32;
 
@@ -31,7 +34,7 @@ protected:
 
 // for the assignment of an unique id to a component type
 template <typename T>
-class Component: public IComponent {
+class Component : public IComponent {
 public:
 	// returns the ID of Component<T>
 	static int GetId() {
@@ -93,6 +96,7 @@ public:
 	void RemoveEntityFromSystem(Entity entity);
 	std::vector<Entity> GetSystemEntities() const; // getting the Entities in the System
 	const Signature& GetComponentSignature() const; // getting the signature of the Components assigned to this System
+	Entity& GetEntityFromSystem(int id);
 
 	// component which entities need if the system should run at them
 	template <typename TComponent> void RequireComponent();
@@ -110,7 +114,7 @@ public:
 
 
 // a vector of objects of type T
-template <typename T> class Pool: public IPool {
+template <typename T> class Pool : public IPool {
 private:
 	std::vector<T> data;
 public:
@@ -129,7 +133,7 @@ public:
 
 	void Resize(int n) {
 		data.resize(n);
-	} 
+	}
 
 	void Clear() {
 		data.clear();
@@ -199,7 +203,7 @@ public:
 	// checks if an entity has a component of type TComponent
 	template <typename TComponent> bool HasComponent(Entity entity) const;
 	// returns a reference to a specific component from an Entity
-	template <typename TComponent> TComponent& GetComponent(Entity entity) const;	
+	template <typename TComponent> TComponent& GetComponent(Entity entity) const;
 
 	// adds a system of type TSystem with the arguments TArgs
 	template <typename TSystem, typename ...TArgs> void AddSystem(TArgs&& ...args);
@@ -257,17 +261,17 @@ TSystem& Registry::GetSystem() {
 	if (!HasSystem<TSystem>()) {
 		if (!illegalSystems.count(typeid(TSystem))) {
 			Logger::critical("The System \"{}\" doesn't exist or is not registered!", typeid(TSystem).name());
+			std::runtime_error("The System \"{}\" doesn't exist or is not registered!");
 			illegalSystems.insert(typeid(TSystem));
 		};
-		return *(new TSystem());
 	}
 	auto system = systems.find(std::type_index(typeid(TSystem)));
 	std::shared_ptr<TSystem> systemPtr = std::static_pointer_cast<TSystem>(system->second);
 	if (!systemPtr) {
 		Logger::critical("The Pointer to the System \"{}\" could not be created!", typeid(TSystem).name());
-		return *(new TSystem());
+		std::runtime_error("The System \"{}\" doesn't exist or is not registered!");
 	}
-	return *systemPtr; 
+	return *systemPtr;
 }
 
 
@@ -323,12 +327,12 @@ TComponent& Registry::GetComponent(Entity entity) const {
 	const int componentId = Component<TComponent>::GetId();
 	const int entityId = entity.GetId();
 	auto componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
-	return componentPool->Get(entityId);	
+	return componentPool->Get(entityId);
 }
 
 template <typename TComponent, typename ...TArgs>
 void Entity::AddComponent(TArgs&& ...args) {
-    registry->AddComponent<TComponent>(*this, std::forward<TArgs>(args)...);
+	registry->AddComponent<TComponent>(*this, std::forward<TArgs>(args)...);
 }
 
 template <typename TComponent>

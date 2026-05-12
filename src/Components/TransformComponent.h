@@ -1,5 +1,6 @@
 #pragma once
-#include <glm/glm.hpp>
+#include <glm/detail/type_vec2.hpp>
+#include <glm/fwd.hpp>
 
 struct TransformComponent {
 	glm::vec2 position;

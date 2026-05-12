@@ -37,7 +37,7 @@ namespace glm
 	GLM_FUNC_DECL vec<L, uint, Q> uaddCarry(
 		vec<L, uint, Q> const& x,
 		vec<L, uint, Q> const& y,
-		vec<L, uint, Q> & carry);
+		vec<L, uint, Q>& carry);
 
 	/// Subtracts the 32-bit unsigned integer y from x, returning
 	/// the difference if non-negative, or pow(2, 32) plus the difference
@@ -51,7 +51,7 @@ namespace glm
 	GLM_FUNC_DECL vec<L, uint, Q> usubBorrow(
 		vec<L, uint, Q> const& x,
 		vec<L, uint, Q> const& y,
-		vec<L, uint, Q> & borrow);
+		vec<L, uint, Q>& borrow);
 
 	/// Multiplies 32-bit integers x and y, producing a 64-bit
 	/// result. The 32 least-significant bits are returned in lsb.
@@ -65,8 +65,8 @@ namespace glm
 	GLM_FUNC_DECL void umulExtended(
 		vec<L, uint, Q> const& x,
 		vec<L, uint, Q> const& y,
-		vec<L, uint, Q> & msb,
-		vec<L, uint, Q> & lsb);
+		vec<L, uint, Q>& msb,
+		vec<L, uint, Q>& lsb);
 
 	/// Multiplies 32-bit integers x and y, producing a 64-bit
 	/// result. The 32 least-significant bits are returned in lsb.
@@ -80,8 +80,8 @@ namespace glm
 	GLM_FUNC_DECL void imulExtended(
 		vec<L, int, Q> const& x,
 		vec<L, int, Q> const& y,
-		vec<L, int, Q> & msb,
-		vec<L, int, Q> & lsb);
+		vec<L, int, Q>& msb,
+		vec<L, int, Q>& lsb);
 
 	/// Extracts bits [offset, offset + bits - 1] from value,
 	/// returning them in the least significant bits of the result.

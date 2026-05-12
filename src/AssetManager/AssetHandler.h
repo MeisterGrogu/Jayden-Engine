@@ -1,10 +1,9 @@
 #pragma once
 #include <map>
 #include <unordered_set>
-#include <SDL.h>
+#include <SDL_render.h>
 #include "../ECS/ECS.h"
 #include <string>
-#include <vector>
 
 class AssetHandler {
 private:
@@ -18,9 +17,9 @@ public:
 	~AssetHandler();
 
 	void ClearAssets();
-	
+
 	void AddTexture(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
-	SDL_Texture* GetTexture(const std::string & assetId);
+	SDL_Texture* GetTexture(const std::string& assetId);
 
 	void AddAnimation(const std::string& animationId, const Animation& frameIndices);
 	void AddAnimation(const std::string& animationId, const unsigned int frameFrom, const unsigned int frameTo);

@@ -49,9 +49,9 @@ namespace glm
 
 		typedef length_t length_type;
 		/// Return the count of components of a dual quaternion
-		GLM_FUNC_DECL static GLM_CONSTEXPR length_type length(){return 2;}
+		GLM_FUNC_DECL static GLM_CONSTEXPR length_type length() { return 2; }
 
-		GLM_FUNC_DECL part_type & operator[](length_type i);
+		GLM_FUNC_DECL part_type& operator[](length_type i);
 		GLM_FUNC_DECL part_type const& operator[](length_type i) const;
 
 		// -- Implicit basic constructors --
@@ -77,14 +77,14 @@ namespace glm
 
 		// -- Unary arithmetic operators --
 
-		GLM_FUNC_DECL tdualquat<T, Q> & operator=(tdualquat<T, Q> const& m) GLM_DEFAULT;
+		GLM_FUNC_DECL tdualquat<T, Q>& operator=(tdualquat<T, Q> const& m) GLM_DEFAULT;
 
 		template<typename U>
-		GLM_FUNC_DECL tdualquat<T, Q> & operator=(tdualquat<U, Q> const& m);
+		GLM_FUNC_DECL tdualquat<T, Q>& operator=(tdualquat<U, Q> const& m);
 		template<typename U>
-		GLM_FUNC_DECL tdualquat<T, Q> & operator*=(U s);
+		GLM_FUNC_DECL tdualquat<T, Q>& operator*=(U s);
 		template<typename U>
-		GLM_FUNC_DECL tdualquat<T, Q> & operator/=(U s);
+		GLM_FUNC_DECL tdualquat<T, Q>& operator/=(U s);
 	};
 
 	// -- Unary bit operators --

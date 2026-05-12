@@ -1,4 +1,6 @@
 #pragma once
+#include <SDL_rect.h>
+#include <string>
 
 struct SpriteComponent {
 	std::string assetId;

@@ -9,9 +9,9 @@ namespace glm
 	)
 	{
 		vec<3, T, Q> result;
-		result.x/*Y */ =   rgbColor.r / T(4) + rgbColor.g / T(2) + rgbColor.b / T(4);
-		result.y/*Co*/ =   rgbColor.r / T(2) + rgbColor.g * T(0) - rgbColor.b / T(2);
-		result.z/*Cg*/ = - rgbColor.r / T(4) + rgbColor.g / T(2) - rgbColor.b / T(4);
+		result.x/*Y */ = rgbColor.r / T(4) + rgbColor.g / T(2) + rgbColor.b / T(4);
+		result.y/*Co*/ = rgbColor.r / T(2) + rgbColor.g * T(0) - rgbColor.b / T(2);
+		result.z/*Cg*/ = -rgbColor.r / T(4) + rgbColor.g / T(2) - rgbColor.b / T(4);
 		return result;
 	}
 
@@ -23,7 +23,7 @@ namespace glm
 	{
 		vec<3, T, Q> result;
 		result.r = YCoCgColor.x + YCoCgColor.y - YCoCgColor.z;
-		result.g = YCoCgColor.x				   + YCoCgColor.z;
+		result.g = YCoCgColor.x + YCoCgColor.z;
 		result.b = YCoCgColor.x - YCoCgColor.y - YCoCgColor.z;
 		return result;
 	}

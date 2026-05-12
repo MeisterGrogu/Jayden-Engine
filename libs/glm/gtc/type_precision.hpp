@@ -1852,13 +1852,13 @@ namespace glm
 
 #	ifndef GLM_FORCE_SINGLE_ONLY
 
-		/// 64 bit double-qualifier floating-point scalar.
-		/// @see gtc_type_precision
-		typedef float64 float64_t;
+	/// 64 bit double-qualifier floating-point scalar.
+	/// @see gtc_type_precision
+	typedef float64 float64_t;
 
-		/// 64 bit double-qualifier floating-point scalar.
-		/// @see gtc_type_precision
-		typedef float64 f64;
+	/// 64 bit double-qualifier floating-point scalar.
+	/// @see gtc_type_precision
+	typedef float64 f64;
 #	endif//GLM_FORCE_SINGLE_ONLY
 
 	/// Single-qualifier floating-point vector of 1 component.
@@ -1895,21 +1895,21 @@ namespace glm
 	typedef vec<4, f32, defaultp> f32vec4;
 
 #	ifndef GLM_FORCE_SINGLE_ONLY
-		/// Double-qualifier floating-point vector of 1 component.
-		/// @see gtc_type_precision
-		typedef vec<1, f64, defaultp> f64vec1;
+	/// Double-qualifier floating-point vector of 1 component.
+	/// @see gtc_type_precision
+	typedef vec<1, f64, defaultp> f64vec1;
 
-		/// Double-qualifier floating-point vector of 2 components.
-		/// @see gtc_type_precision
-		typedef vec<2, f64, defaultp> f64vec2;
+	/// Double-qualifier floating-point vector of 2 components.
+	/// @see gtc_type_precision
+	typedef vec<2, f64, defaultp> f64vec2;
 
-		/// Double-qualifier floating-point vector of 3 components.
-		/// @see gtc_type_precision
-		typedef vec<3, f64, defaultp> f64vec3;
+	/// Double-qualifier floating-point vector of 3 components.
+	/// @see gtc_type_precision
+	typedef vec<3, f64, defaultp> f64vec3;
 
-		/// Double-qualifier floating-point vector of 4 components.
-		/// @see gtc_type_precision
-		typedef vec<4, f64, defaultp> f64vec4;
+	/// Double-qualifier floating-point vector of 4 components.
+	/// @see gtc_type_precision
+	typedef vec<4, f64, defaultp> f64vec4;
 #	endif//GLM_FORCE_SINGLE_ONLY
 
 

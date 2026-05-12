@@ -1,17 +1,26 @@
 #include "Game.h"
 #include "../ECS/ECS.h"
-#include <SDL_image.h>
-#include <glm/glm.hpp>
-#include <fstream>
+#include "../AssetManager/AssetHandler.h"
 #include "../Logger/Logger.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
 #include "../Components/SpriteComponent.h"
 #include "../Components/AnimationComponent.h"
+#include "../Components/BoxColliderComponent.h"
 #include "../Systems/MovementSystem.h"
 #include "../Systems/RenderingSystem.h"
 #include "../Systems/AnimationSystem.h"
+#include "../Systems/CollisionSystem.h"
 #include <SDL_timer.h>
+#include <SDL.h>
+#include <SDL_video.h>
+#include <SDL_render.h>
+#include <SDL_events.h>
+#include <SDL_keycode.h>
+#include <glm/fwd.hpp>
+#include <memory>
+#include <fstream>
+#include <cstdlib>
 
 Game::Game() {
 	Logger::set_level(Logger::level::debug);
@@ -25,11 +34,11 @@ Game::Game() {
 	windowHeight = 0;
 }
 
-Game::~Game(){
+Game::~Game() {
 	Logger::trace("Game destructor called!");
 }
 
-void Game::Initialize(){
+void Game::Initialize() {
 	//// Rendering init start
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		Logger::critical("Error initializing rendering.");
@@ -40,7 +49,7 @@ void Game::Initialize(){
 	windowWidth = displayMode.w;
 	windowHeight = displayMode.h;
 	window = SDL_CreateWindow(
-		"Jayden Engine",	
+		"Jayden Engine",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		windowWidth,
@@ -71,15 +80,15 @@ void Game::ProcessInput() {
 	SDL_Event sdlEvent;
 	while (SDL_PollEvent(&sdlEvent)) {
 		switch (sdlEvent.type) {
-			case SDL_QUIT:
+		case SDL_QUIT:
+			isRunning = false;
+			break;
+		case SDL_KEYDOWN:
+			// TODO remove
+			if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) {
 				isRunning = false;
-				break;
-			case SDL_KEYDOWN:
-				// TODO remove
-				if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) {
-					isRunning = false;
-				}
-				break;
+			}
+			break;
 		}
 	}
 }
@@ -88,13 +97,15 @@ void Game::LoadLevel(int level) {
 	registry->AddSystem<MovementSystem>();
 	registry->AddSystem<RenderingSystem>();
 	registry->AddSystem<AnimationSystem>();
+	registry->AddSystem<CollisionSystem>();
 
 	assetHandler->AddTexture(renderer, "tank-right", "./assets/images/tank-panther-right.png");
+	assetHandler->AddTexture(renderer, "tank-left", "./assets/images/tank-panther-left.png");
 	assetHandler->AddTexture(renderer, "truck-right", "./assets/images/truck-ford-right.png");
 	assetHandler->AddTexture(renderer, "helicopter-image", "./assets/images/chopper.png");
 	assetHandler->AddTexture(renderer, "radar-image", "./assets/images/radar.png");
 
-	assetHandler->AddAnimation("helicopter-running", {0, 1});
+	assetHandler->AddAnimation("helicopter-running", { 0, 1 });
 	assetHandler->AddAnimation("radar-turning", 8);
 
 	// TODO: I dont like this part loading the tilemap should be seperated and abstracted
@@ -125,7 +136,7 @@ void Game::LoadLevel(int level) {
 			tile.AddComponent<SpriteComponent>("tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
 		}
 	}
-	
+
 	mapFile.close();
 
 	Entity helicopter = registry->CreateEntity();
@@ -141,15 +152,16 @@ void Game::LoadLevel(int level) {
 	radar.AddComponent<AnimationComponent>("radar-turning", 5, 1, true);
 
 	Entity tank = registry->CreateEntity();
-	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);  
-	tank.AddComponent<RigidBodyComponent>(glm::vec2(20.0, 0.0));
-	tank.AddComponent<SpriteComponent>("tank-right", 32, 32, 1);
-	// tank.AddComponent<BoxColliderComponent>(___);
+	tank.AddComponent<TransformComponent>(glm::vec2(500.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	tank.AddComponent<RigidBodyComponent>(glm::vec2(-30.0, 0.0));
+	tank.AddComponent<SpriteComponent>("tank-left", 32, 32, 1);
+	tank.AddComponent<BoxColliderComponent>(32, 32);
 
 	Entity truck = registry->CreateEntity();
-	truck.AddComponent<TransformComponent>(glm::vec2(10.0, 50.0), glm::vec2(1.0, 1.0), 0.0);
-	truck.AddComponent<RigidBodyComponent>(glm::vec2(30.0, 0.0));
+	truck.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	truck.AddComponent<RigidBodyComponent>(glm::vec2(20.0, 0.0));
 	truck.AddComponent<SpriteComponent>("truck-right", 32, 32, 1);
+	truck.AddComponent<BoxColliderComponent>(32, 32);
 }
 
 void Game::Setup() {
@@ -165,13 +177,14 @@ void Game::Update() {
 		}
 	}
 
-	double deltaTime = (SDL_GetTicks() - msPrevFrame) / 1000.0;
+	float deltaTime = static_cast<float>(SDL_GetTicks() - msPrevFrame) / 1000.0f;
 
 	msPrevFrame = SDL_GetTicks();
 
 	registry->Update();
 
 	registry->GetSystem<MovementSystem>().Update(deltaTime);
+	registry->GetSystem<CollisionSystem>().Update();
 	registry->GetSystem<AnimationSystem>().Update(deltaTime, assetHandler);
 }
 
@@ -188,6 +201,7 @@ void Game::Render() {
 
 void Game::Run() {
 	Setup();
+	msPrevFrame = SDL_GetTicks();
 	while (isRunning) {
 		ProcessInput();
 		Update();
@@ -195,7 +209,7 @@ void Game::Run() {
 	}
 }
 
-void Game::Destroy(){
+void Game::Destroy() {
 	//// Rendere quit start
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
